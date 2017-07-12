@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0">
+	<access>FIELD</access> <!-- utilisation des setters (PROPERTY) des classes des entités -->
+	
+	<named-query name="getEmprunteurByEmail">
+		<query>select e from EmprunteurImpl e where e.email = ?1 </query>
+	</named-query>
+	
+	<!--  classe annotée  -->
+	<entity class="be.steformations.java_data.biblio.jpa.AuteurImpl" >
+			<table name="auteurs"></table> <!-- @Table -->
+		<attributes> <!-- Mappage des propriétés de la classe -->
+			<id name="id">
+				<column name="aut_code" /> <!-- @Column -->	
+				<generated-value strategy="IDENTITY" />	
+			</id>		
+			<basic name="nom"> <!-- @Basic -->
+				<column name="aut_nom" /> <!-- @Column -->	
+			</basic>	
+			<basic name="prenom">
+				<column name="aut_prenom" /> <!-- @Column -->
+			</basic>			
+		</attributes>
+	</entity>
+	
+	
+	<entity class="be.steformations.java_data.biblio.jpa.CollectionImpl"> <!--  @Entity -->
+		<table name="collections"></table> <!-- @Table -->
+		<attributes> <!-- Mappage des propriétés de la classe -->
+			<id name="id">
+				<column name="col_code" /> <!-- @Column -->		
+				<generated-value strategy="IDENTITY" />	
+			</id>		
+			<basic name="nom" > <!-- @Basic -->
+				<column name="col_nom" /> <!-- @Column -->	
+			</basic>			
+		</attributes>
+	</entity>
+	
+	<entity class="be.steformations.java_data.biblio.jpa.EmprunteurImpl" >
+		<table name="emprunteurs"></table> <!-- @Table -->
+		<attributes> <!-- Mappage des propriétés de la classe -->	
+			<!-- La ligne suivante est là pour signaler que l'id est de type serial et déterminé par la DB elle-même -->
+			<id name="id">
+				<column name="emp_code" /> <!-- @Column -->	
+				<generated-value strategy="IDENTITY" /> 
+			</id>			
+	  		<basic name="nom" > 
+	  			<column name="emp_nom" /> <!-- @Column -->	
+	  		</basic>
+	  		<basic name="prenom" >
+	  			<column name="emp_prenom" /> <!-- @Column -->	
+	  		</basic>
+	  		<basic name="ddn" >  
+		  		<column name="emp_ddn" /> <!-- @Column -->	
+		  		<temporal>DATE</temporal>
+	  		</basic>  	  				
+	  		<basic name="telephone" >  
+	  			 <column name="emp_tel" /> <!-- @Column -->	
+	  		</basic>
+	  		<basic name="email" >  
+	  			 <column name="emp_email" /> <!-- @Column -->	
+	  		</basic>
+		</attributes>
+	</entity>		
+	
+	<entity class="be.steformations.java_data.biblio.jpa.LivreImpl" >
+		<table name="livres"></table> <!-- @Table -->
+		<attributes> <!-- Mappage des propriétés de la classe -->	
+			<!-- La ligne suivante est là pour signaler que l'id est de type serial et déterminé par la DB elle-même -->
+			<id name="code">
+				<column name="liv_code" /> <!-- @Column -->	
+			</id>
+			<basic name="titre"> 
+	  			<column name="liv_titre"/>
+	  		</basic>
+	  		<basic name="nbPages" > 
+	  			<column name="liv_pages" /> <!-- @Column -->		  		
+	  		</basic>
+	  		<basic name="numero" > 
+	  			<column name="liv_edition" /> <!-- @Column -->		  		
+	  		</basic> 
+	  		<basic name="ddp" > 
+	  			<column name="liv_parution" /> <!-- @Column -->	
+	  		    <temporal>DATE</temporal>	  		
+	  		</basic> 
+	  		<many-to-one name="collection" target-entity="be.steformations.java_data.biblio.jpa.CollectionImpl"> 
+	  			<join-column name="liv_collection"/>
+	  		</many-to-one>
+	  		<many-to-many name="auteurs"> 
+	  			<join-table name="livres_auteurs">
+	  				<join-column name="livre_id"/>
+	  				<inverse-join-column name="auteur_id"/>
+	  			</join-table>	  			
+	  		</many-to-many>
+		</attributes>
+	</entity>	
+	
+	<entity class="be.steformations.java_data.biblio.jpa.ReservationImpl" >
+		<table name="reservations"></table> <!-- @Table -->
+		<attributes> <!-- Mappage des propriétés de la classe -->	
+			<!-- La ligne suivante est là pour signaler que l'id est de type serial et déterminé par la DB elle-même -->
+			<id name="id">
+				<column name="res_code" />
+				<generated-value strategy="IDENTITY" /> 
+			</id>
+	  		<basic name="ddr" >
+	  			<column name="res_date" /> <!-- @Column -->		
+	  			<temporal>DATE</temporal>
+	  		</basic>	
+	  		<many-to-one name="emprunteur" target-entity="be.steformations.java_data.biblio.jpa.EmprunteurImpl">  <join-column name="res_emprunteur"/></many-to-one>
+	  		<many-to-one name="livre" target-entity="be.steformations.java_data.biblio.jpa.LivreImpl">  <join-column name="res_livre"/></many-to-one>
+		</attributes>
+	</entity>				
+	
+</entity-mappings>
