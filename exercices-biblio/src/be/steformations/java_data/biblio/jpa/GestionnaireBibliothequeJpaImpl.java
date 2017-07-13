@@ -282,7 +282,7 @@ public class GestionnaireBibliothequeJpaImpl implements GestionnaireBibliotheque
 			}
 			if (listAuteur != null && autConnu){
 				codeL = this.getLivreIdMax();
-				newVersion = "C" + (Integer.parseInt(codeL.substring(1,codeL.length()))+1);
+				newVersion = (codeL.substring(0,1)) + (Integer.parseInt(codeL.substring(1,codeL.length()))+1);
 				l = new LivreImpl();
 				l.setCode(newVersion);
 				l.setTitre(titre);
